@@ -45,11 +45,18 @@
     return { B: B, v: v, r: r, om: om, vpar: vpar, sgn: sgn };
   }
 
+  /* физические величины для электрона: B в мТл, v в 10⁶ м/с */
+  var ME = 9.109384e-31, QE = 1.602177e-19;
   function readout(p) {
-    out.textContent = 'B = ' + p.B.toFixed(2) + ' Тл · v = ' + (p.v * 1e6).toFixed(2)
-      + '·10⁶ м/с · r ≈ ' + (p.r / 70).toFixed(2) + ' см (в модели) · период T = '
-      + (2 * Math.PI / Math.abs(p.om)).toFixed(2) + ' с модельного времени'
-      + (p.sgn < 0 ? ' · заряд отрицательный' : ' · заряд положительный');
+    var B = p.B * 1e-3, v = p.v * 1e6;
+    var r = ME * v / (QE * B);                 /* м */
+    var T = 2 * Math.PI * ME / (QE * B);       /* с */
+    out.textContent = 'электрон в поле B = ' + p.B.toFixed(2) + ' мТл при v = '
+      + p.v.toFixed(2) + '·10⁶ м/с: радиус r = mv/(qB) = ' + (r * 1e3).toFixed(1)
+      + ' мм, период T = 2πm/(qB) = ' + (T * 1e9).toFixed(1) + ' нс, частота '
+      + (1 / T / 1e6).toFixed(1) + ' МГц · заряд '
+      + (p.sgn < 0 ? 'отрицательный (вращение против часовой стрелки)'
+        : 'положительный (вращение по часовой стрелке)');
   }
 
   var visible = true, raf = null, t0 = performance.now();

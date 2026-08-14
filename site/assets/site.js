@@ -33,7 +33,11 @@
       { h: 'p-electro', k: 'problems', t: 'Электричество и магнетизм' },
       { h: 'p-quantum', k: 'problems', t: 'Оптика и квантовая физика' },
     ] },
-    { h: 'sources', k: 'sources', t: 'Источники' },
+    { h: 'lab', k: 'lab', t: 'Практикум' },
+    { t: 'Источники', h: 'sources', drop: [
+      { h: 'sources', k: 'sources', t: 'Литература курса' },
+      { h: 'constants', k: 'sources', t: 'Справочник постоянных' },
+    ] },
   ];
   const navLink = (it) =>
     `<a href="${root}${it.h}" class="${page === it.k ? 'on' : ''}">${it.t}</a>`;

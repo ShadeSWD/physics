@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Справочник физических постоянных и табличных величин</title>
+<meta name="description" content="Фундаментальные физические постоянные (CODATA), производные величины, приставки СИ, параметры воздуха и воды, теплоёмкости газов, работы выхода, показатели преломления, моменты инерции тел, ширины запрещённых зон, свойства ядер — единым справочником для решения задач.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚛️</text></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<script src="assets/site.js" data-root="./" data-page="sources"></script>
+<main class="wrap">
+  <h1>Справочник: физические постоянные и табличные величины</h1>
+  <p class="lead">Все числа, нужные для решения задач курса, собраны здесь в
+  одном месте: фундаментальные постоянные, свойства воздуха и воды,
+  теплоёмкости, работы выхода, показатели преломления, моменты инерции.
+  Значения постоянных приведены по рекомендациям CODATA (пересмотр СИ 2019 года,
+  когда \(h\), \(e\), \(k\) и \(N_A\) стали точными по определению); в
+  лабораторном практикуме кафедры используется таблица с прежними, менее
+  точными значениями — расхождения лежат в шестом-седьмом знаке и на результат
+  учебных расчётов не влияют.</p>
+
+  <h2>1. Фундаментальные постоянные</h2>
+  <table class="el">
+    <tr><th>Величина</th><th>Обозначение</th><th class="num">Значение</th><th>Единица</th></tr>
+    <tr><td>Скорость света в вакууме (точно)</td><td>\(c\)</td><td class="num">2,997 924 58·10⁸</td><td>м/с</td></tr>
+    <tr><td>Постоянная Планка (точно)</td><td>\(h\)</td><td class="num">6,626 070 15·10⁻³⁴</td><td>Дж·с</td></tr>
+    <tr><td>Приведённая постоянная Планка</td><td>\(\hbar=h/2\pi\)</td><td class="num">1,054 572·10⁻³⁴</td><td>Дж·с</td></tr>
+    <tr><td>Элементарный заряд (точно)</td><td>\(e\)</td><td class="num">1,602 176 634·10⁻¹⁹</td><td>Кл</td></tr>
+    <tr><td>Постоянная Больцмана (точно)</td><td>\(k\)</td><td class="num">1,380 649·10⁻²³</td><td>Дж/К</td></tr>
+    <tr><td>Постоянная Авогадро (точно)</td><td>\(N_A\)</td><td class="num">6,022 140 76·10²³</td><td>моль⁻¹</td></tr>
+    <tr><td>Универсальная газовая постоянная</td><td>\(R=kN_A\)</td><td class="num">8,314 463</td><td>Дж/(моль·К)</td></tr>
+    <tr><td>Гравитационная постоянная</td><td>\(G\)</td><td class="num">6,674 30·10⁻¹¹</td><td>Н·м²/кг²</td></tr>
+    <tr><td>Электрическая постоянная</td><td>\(\varepsilon_0\)</td><td class="num">8,854 188·10⁻¹²</td><td>Ф/м</td></tr>
+    <tr><td>Магнитная постоянная</td><td>\(\mu_0\)</td><td class="num">1,256 637·10⁻⁶</td><td>Гн/м</td></tr>
+    <tr><td>Коэффициент в законе Кулона</td><td>\(1/4\pi\varepsilon_0\)</td><td class="num">8,987 55·10⁹</td><td>Н·м²/Кл²</td></tr>
+    <tr><td>Масса покоя электрона</td><td>\(m_e\)</td><td class="num">9,109 384·10⁻³¹</td><td>кг</td></tr>
+    <tr><td>Масса покоя протона</td><td>\(m_p\)</td><td class="num">1,672 622·10⁻²⁷</td><td>кг</td></tr>
+    <tr><td>Масса покоя нейтрона</td><td>\(m_n\)</td><td class="num">1,674 927·10⁻²⁷</td><td>кг</td></tr>
+    <tr><td>Атомная единица массы</td><td>\(1\ \text{а. е. м.}\)</td><td class="num">1,660 539·10⁻²⁷</td><td>кг (931,49 МэВ)</td></tr>
+    <tr><td>Постоянная Стефана — Больцмана</td><td>\(\sigma\)</td><td class="num">5,670 374·10⁻⁸</td><td>Вт/(м²·К⁴)</td></tr>
+    <tr><td>Постоянная закона смещения Вина</td><td>\(b\)</td><td class="num">2,897 771·10⁻³</td><td>м·К</td></tr>
+    <tr><td>Постоянная Ридберга</td><td>\(R_\infty\)</td><td class="num">1,097 373·10⁷</td><td>м⁻¹</td></tr>
+    <tr><td>Боровский радиус</td><td>\(a_0\)</td><td class="num">5,291 772·10⁻¹¹</td><td>м</td></tr>
+    <tr><td>Комптоновская длина волны электрона</td><td>\(\Lambda_C\)</td><td class="num">2,426 310·10⁻¹²</td><td>м</td></tr>
+    <tr><td>Постоянная Фарадея</td><td>\(F\)</td><td class="num">96 485,3</td><td>Кл/моль</td></tr>
+    <tr><td>Удельный заряд электрона</td><td>\(e/m_e\)</td><td class="num">1,758 820·10¹¹</td><td>Кл/кг</td></tr>
+  </table>
+
+  <h2>2. Астрономические и земные величины</h2>
+  <table class="el">
+    <tr><th>Величина</th><th class="num">Значение</th></tr>
+    <tr><td>Нормальное ускорение свободного падения \(g\)</td><td class="num">9,806 65 м/с² (в расчётах 9,81)</td></tr>
+    <tr><td>Нормальное атмосферное давление</td><td class="num">101 325 Па</td></tr>
+    <tr><td>Нормальные условия (для газов)</td><td class="num">\(T=273{,}15\) К, \(p=101{,}325\) кПа, \(V_\mu=22{,}41\) л/моль</td></tr>
+    <tr><td>Масса Земли</td><td class="num">5,972·10²⁴ кг</td></tr>
+    <tr><td>Средний радиус Земли</td><td class="num">6371 км</td></tr>
+    <tr><td>Первая и вторая космические скорости</td><td class="num">7,91 и 11,2 км/с</td></tr>
+    <tr><td>Магнитное поле Земли (горизонтальная составляющая, СПб)</td><td class="num">≈ 1,6·10⁻⁵ Тл</td></tr>
+  </table>
+
+  <h2>3. Приставки СИ</h2>
+  <table class="el">
+    <tr><th>Приставка</th><th class="num">Множитель</th><th>Приставка</th><th class="num">Множитель</th></tr>
+    <tr><td>тера (Т)</td><td class="num">10¹²</td><td>санти (с)</td><td class="num">10⁻²</td></tr>
+    <tr><td>гига (Г)</td><td class="num">10⁹</td><td>милли (м)</td><td class="num">10⁻³</td></tr>
+    <tr><td>мега (М)</td><td class="num">10⁶</td><td>микро (мк)</td><td class="num">10⁻⁶</td></tr>
+    <tr><td>кило (к)</td><td class="num">10³</td><td>нано (н)</td><td class="num">10⁻⁹</td></tr>
+    <tr><td>гекто (г)</td><td class="num">10²</td><td>пико (п)</td><td class="num">10⁻¹²</td></tr>
+    <tr><td>деци (д)</td><td class="num">10⁻¹</td><td>фемто (ф)</td><td class="num">10⁻¹⁵</td></tr>
+  </table>
+  <p class="small">Внесистемные единицы, встречающиеся в курсе:
+  1 эВ \(=1{,}602\cdot10^{-19}\) Дж; 1 а. е. м. \(=931{,}5\) МэВ;
+  1 мм рт. ст. \(=133{,}3\) Па; 1 бар \(=10^5\) Па; 1 барн \(=10^{-28}\) м²;
+  1 Ки \(=3{,}7\cdot10^{10}\) Бк; 1 Гс \(=10^{-4}\) Тл.</p>
+
+  <h2>4. Механика: моменты инерции однородных тел</h2>
+  <table class="el">
+    <tr><th>Тело и ось</th><th class="num">\(I\)</th></tr>
+    <tr><td>Тонкий обруч, тонкостенный цилиндр (ось симметрии)</td><td class="num">\(mR^2\)</td></tr>
+    <tr><td>Сплошной диск, цилиндр (ось симметрии)</td><td class="num">\(\tfrac12mR^2\)</td></tr>
+    <tr><td>Сплошной шар (диаметр)</td><td class="num">\(\tfrac25mR^2\)</td></tr>
+    <tr><td>Тонкостенная сфера (диаметр)</td><td class="num">\(\tfrac23mR^2\)</td></tr>
+    <tr><td>Стержень длиной \(l\) (ось через центр)</td><td class="num">\(\tfrac1{12}ml^2\)</td></tr>
+    <tr><td>Стержень длиной \(l\) (ось через конец)</td><td class="num">\(\tfrac13ml^2\)</td></tr>
+    <tr><td>Диск (диаметр в плоскости диска)</td><td class="num">\(\tfrac14mR^2\)</td></tr>
+  </table>
+
+  <h2>5. Молекулярная физика и термодинамика</h2>
+  <table class="el">
+    <tr><th>Газ</th><th class="num">\(M\), г/моль</th><th class="num">\(i\)</th><th class="num">\(C_V\), Дж/(моль·К)</th><th class="num">\(\gamma\)</th><th class="num">\(d\), нм</th></tr>
+    <tr><td>Гелий He</td><td class="num">4,0</td><td class="num">3</td><td class="num">12,5</td><td class="num">1,67</td><td class="num">0,20</td></tr>
+    <tr><td>Аргон Ar</td><td class="num">40,0</td><td class="num">3</td><td class="num">12,5</td><td class="num">1,67</td><td class="num">0,35</td></tr>
+    <tr><td>Водород H₂</td><td class="num">2,0</td><td class="num">5</td><td class="num">20,8</td><td class="num">1,41</td><td class="num">0,23</td></tr>
+    <tr><td>Азот N₂</td><td class="num">28,0</td><td class="num">5</td><td class="num">20,8</td><td class="num">1,40</td><td class="num">0,37</td></tr>
+    <tr><td>Кислород O₂</td><td class="num">32,0</td><td class="num">5</td><td class="num">20,8</td><td class="num">1,40</td><td class="num">0,35</td></tr>
+    <tr><td>Воздух (смесь)</td><td class="num">29,0</td><td class="num">5</td><td class="num">20,8</td><td class="num">1,40</td><td class="num">0,37</td></tr>
+    <tr><td>Углекислый газ CO₂</td><td class="num">44,0</td><td class="num">6</td><td class="num">24,9</td><td class="num">1,30</td><td class="num">0,40</td></tr>
+    <tr><td>Водяной пар H₂O</td><td class="num">18,0</td><td class="num">6</td><td class="num">24,9</td><td class="num">1,33</td><td class="num">0,30</td></tr>
+  </table>
+  <table class="el">
+    <tr><th>Свойство</th><th class="num">Значение</th></tr>
+    <tr><td>Плотность воздуха при 0 °C и 101,3 кПа</td><td class="num">1,293 кг/м³</td></tr>
+    <tr><td>Динамическая вязкость воздуха при 20 °C</td><td class="num">1,81·10⁻⁵ Па·с</td></tr>
+    <tr><td>Теплопроводность воздуха при 20 °C</td><td class="num">0,026 Вт/(м·К)</td></tr>
+    <tr><td>Длина свободного пробега в воздухе при н. у.</td><td class="num">≈ 70 нм</td></tr>
+    <tr><td>Плотность воды при 4 °C</td><td class="num">1000 кг/м³</td></tr>
+    <tr><td>Удельная теплоёмкость воды</td><td class="num">4190 Дж/(кг·К)</td></tr>
+    <tr><td>Удельная теплота плавления льда</td><td class="num">3,35·10⁵ Дж/кг</td></tr>
+    <tr><td>Удельная теплота парообразования воды</td><td class="num">2,26·10⁶ Дж/кг</td></tr>
+    <tr><td>Поверхностное натяжение воды при 20 °C</td><td class="num">0,073 Н/м</td></tr>
+    <tr><td>Тройная точка воды</td><td class="num">273,16 К, 611 Па</td></tr>
+    <tr><td>Критическая точка воды</td><td class="num">647,1 К, 22,1 МПа</td></tr>
+    <tr><td>Скорость звука в воздухе (20 °C) / в воде / в стали</td><td class="num">343 / 1500 / 5000 м/с</td></tr>
+  </table>
+
+  <h2>6. Электричество, магнетизм, оптика</h2>
+  <table class="el">
+    <tr><th>Вещество</th><th class="num">\(\varepsilon\)</th><th class="num">\(\rho\), Ом·м (20 °C)</th><th class="num">\(\alpha\), К⁻¹</th><th class="num">\(n\) (жёлтый свет)</th></tr>
+    <tr><td>Вакуум / воздух</td><td class="num">1,0</td><td class="num">—</td><td class="num">—</td><td class="num">1,000</td></tr>
+    <tr><td>Вода</td><td class="num">81</td><td class="num">—</td><td class="num">—</td><td class="num">1,333</td></tr>
+    <tr><td>Стекло</td><td class="num">6…10</td><td class="num">10¹⁰…10¹⁴</td><td class="num">—</td><td class="num">1,50…1,75</td></tr>
+    <tr><td>Слюда</td><td class="num">7</td><td class="num">10¹³</td><td class="num">—</td><td class="num">—</td></tr>
+    <tr><td>Медь</td><td class="num">—</td><td class="num">1,72·10⁻⁸</td><td class="num">4,3·10⁻³</td><td class="num">—</td></tr>
+    <tr><td>Алюминий</td><td class="num">—</td><td class="num">2,8·10⁻⁸</td><td class="num">4,2·10⁻³</td><td class="num">—</td></tr>
+    <tr><td>Сталь</td><td class="num">—</td><td class="num">≈ 1,2·10⁻⁷</td><td class="num">6·10⁻³</td><td class="num">—</td></tr>
+    <tr><td>Алмаз</td><td class="num">5,7</td><td class="num">—</td><td class="num">—</td><td class="num">2,417</td></tr>
+  </table>
+  <table class="el">
+    <tr><th>Величина</th><th class="num">Значение</th></tr>
+    <tr><td>Работа выхода: цезий / цинк / медь / платина</td><td class="num">1,9 / 4,0 / 4,5 / 5,3 эВ</td></tr>
+    <tr><td>Красная граница фотоэффекта для тех же материалов</td><td class="num">650 / 310 / 275 / 234 нм</td></tr>
+    <tr><td>Ширина запрещённой зоны: Ge / Si / GaAs / алмаз</td><td class="num">0,67 / 1,12 / 1,42 / 5,5 эВ</td></tr>
+    <tr><td>Контактная разность потенциалов p-n-перехода (Si)</td><td class="num">≈ 0,7 В</td></tr>
+    <tr><td>Температура Дебая: свинец / медь / алмаз</td><td class="num">105 / 340 / 1860 К</td></tr>
+    <tr><td>Точка Кюри железа</td><td class="num">1041 К (768 °C)</td></tr>
+    <tr><td>Границы видимого спектра</td><td class="num">380…760 нм</td></tr>
+    <tr><td>Порог слышимости \(I_0\)</td><td class="num">10⁻¹² Вт/м²</td></tr>
+  </table>
+
+  <h2>7. Атом и ядро</h2>
+  <table class="el">
+    <tr><th>Величина</th><th class="num">Значение</th></tr>
+    <tr><td>Энергия ионизации водорода</td><td class="num">13,6 эВ</td></tr>
+    <tr><td>Уровни водорода</td><td class="num">\(E_n=-13{,}6/n^2\) эВ</td></tr>
+    <tr><td>Массы в а. е. м.: \(^1\)H / нейтрон / \(^4\)He</td><td class="num">1,007 825 / 1,008 665 / 4,002 603</td></tr>
+    <tr><td>Удельная энергия связи: дейтерий / железо / уран-235</td><td class="num">1,11 / 8,79 / 7,59 МэВ на нуклон</td></tr>
+    <tr><td>Энергия деления одного ядра \(^{235}\)U</td><td class="num">≈ 200 МэВ</td></tr>
+    <tr><td>Период полураспада: \(^{14}\)C / \(^{226}\)Ra / \(^{238}\)U</td><td class="num">5730 лет / 1600 лет / 4,5·10⁹ лет</td></tr>
+    <tr><td>Радиус ядра</td><td class="num">\(R\approx1{,}2\cdot10^{-15}A^{1/3}\) м</td></tr>
+  </table>
+
+  <div class="note tip">
+    <b>Как пользоваться справочником при решении задач.</b> Подставляйте
+    значения в СИ и с тем числом значащих цифр, которое есть у самых грубых
+    исходных данных: если в условии «масса 2 кг», ответ с шестью знаками —
+    ошибка культуры расчёта, а не точность. О правилах округления и об оценке
+    погрешности — на странице <a href="lab">лабораторного практикума</a>.
+  </div>
+
+  <p class="small">Источники значений: рекомендации CODATA (пересмотр СИ
+  2019 года), таблица «Основные физические константы» лабораторного практикума
+  кафедры физики СПбГМТУ, справочные таблицы учебников Савельева и Клюбина —
+  полный список см. на странице <a href="sources">источников</a>.</p>
+
+  <p><a href="theory">Оглавление теории</a> ·
+  <a href="problems">Задачи</a> · <a href="lab">Практикум</a> ·
+  <a href="sources">Источники</a></p>
+</main>
+</body>
+</html>
