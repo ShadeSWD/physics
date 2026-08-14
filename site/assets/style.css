@@ -222,6 +222,9 @@ svg .tap:hover circle.dot { r: 4; }
 
 /* мобильная защита от горизонтального переполнения */
 main table { display: block; max-width: 100%; overflow-x: auto; }
+/* строки «решения по шагам» содержат длинные формулы KaTeX, которые не
+   переносятся: даём им собственную горизонтальную прокрутку */
+main .steps > div { overflow-x: auto; overflow-y: hidden; }
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0 6px; }
 /* KaTeX дублирует формулу в MathML и прячет дубль абсолютным позиционированием,
    но без left/top: пустой бокс 1×1 остаётся в конце широкой строки формулы и на

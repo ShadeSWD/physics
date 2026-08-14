@@ -33,7 +33,15 @@
       { h: 'p-electro', k: 'problems', t: 'Электричество и магнетизм' },
       { h: 'p-quantum', k: 'problems', t: 'Оптика и квантовая физика' },
     ] },
-    { h: 'lab', k: 'lab', t: 'Практикум' },
+    { t: 'Опыты', h: 'lab', drop: [
+      { h: 'lab', k: 'lab', t: 'Практикум: измерения и погрешности' },
+      { h: 'v-pendulum', k: 'v-pendulum', t: '1-18. Ускорение свободного падения' },
+      { h: 'v-oberbeck', k: 'v-oberbeck', t: '1-16. Маятник Обербека' },
+      { h: 'v-maxwell', k: 'v-maxwell', t: '1-13. Маятник Максвелла' },
+      { h: 'v-resonance', k: 'v-resonance', t: '1-3. Механический резонанс' },
+      { h: 'v-sound', k: 'v-sound', t: '1-8. Скорость звука' },
+      { h: 'v-surface', k: 'v-surface', t: '1-7. Поверхностное натяжение' },
+    ] },
     { t: 'Источники', h: 'sources', drop: [
       { h: 'sources', k: 'sources', t: 'Литература курса' },
       { h: 'constants', k: 'sources', t: 'Справочник постоянных' },
