@@ -2,26 +2,6 @@
    Чистый ES5-стиль, без модулей; рисование — обновление атрибутов SVG. */
 'use strict';
 (function () {
-  /* --- общее: цикл rAF, который останавливается вне экрана --- */
-  function loop(panel, draw) {
-    var visible = true, raf = null, t0 = performance.now();
-    function frame(now) {
-      raf = null;
-      draw((now - t0) / 1000);
-      if (visible) raf = requestAnimationFrame(frame);
-    }
-    function start() { if (!raf) raf = requestAnimationFrame(frame); }
-    function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-    if (window.IntersectionObserver) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        if (visible) start(); else stop();
-      }, { threshold: 0.01 }).observe(panel);
-    } else { start(); }
-    start();
-    return { start: start, stop: stop, setVisible: function (v) { visible = v; if (v) start(); else stop(); } };
-  }
-
   /* ================= 1. Резонанс ================= */
   (function () {
     var panel = document.getElementById('osc-res-panel');
@@ -64,7 +44,7 @@
 
     var topA = drawAfc(8);
     var lastQ = -1;
-    var eng = loop(panel, function (t) {
+    var eng = animLoop(panel, function (t) {
       var r = Math.max(0.01, wIn.value / 100);          /* ω/ω₀ */
       var Q = qIn.value / 10;                            /* добротность */
       if (Q !== lastQ) { topA = drawAfc(Q); lastQ = Q; }
@@ -87,7 +67,7 @@
     });
     btn.addEventListener('click', function () {
       running = !running;
-      eng.setVisible(running);
+      eng.setRunning(running);
       btn.textContent = running ? 'Пауза' : 'Пуск';
     });
   })();
@@ -124,7 +104,7 @@
       nodes.innerHTML = s;
     }
 
-    loop(panel, function (t) {
+    animLoop(panel, function (t) {
       var m = mode.value, p = pIn.value / 100;   /* 0…2 */
       var k = 2 * Math.PI * 2.5, om = 2 * Math.PI * 0.5;
       var f1, f2, label;

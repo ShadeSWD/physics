@@ -5,7 +5,6 @@
  * по ряду измерений диаметра — напряжение в струне с доверительным интервалом. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vr');
   if (!svg || !window.VL) return;
 
@@ -206,8 +205,7 @@
     const dE = (eL != null && eR != null) ? eR - eL : null;
     const Q = dE ? 2 * Eres / dE : null;
 
-    const chart = VL.el('svg', { viewBox: '0 0 640 320', class: 'geo-board', style: 'max-width:640px' });
-    $('vrchart').appendChild(chart);
+    const chart = VL.chart('vrchart', '0 0 640 320');
     const ax = VL.axes(chart, {
       x0: 66, y0: 262, x1: 596, y1: 46, xmin: 0, xmax: 3, ymin: 0, ymax: Math.max(0.5, amax * 1.2),
       xticks: [0.5, 1.0, 1.5, 2.0, 2.5, 3.0].map(v => ({ v, label: VL.fm(v, 1) })),
@@ -227,13 +225,13 @@
       x1: ax.X(0), y1: ax.Y(lvl), x2: ax.X(3), y2: ax.Y(lvl),
       stroke: '#b3382e', 'stroke-width': 1, 'stroke-dasharray': '4 4',
     }, chart);
-    const t0 = VL.el('text', { x: ax.X(3), y: ax.Y(lvl) - 5, 'text-anchor': 'end',
-      style: 'font:11px system-ui;fill:#b3382e' }, chart);
-    t0.textContent = 'уровень A_max/√2 = ' + VL.fm(lvl, 2) + ' мм';
-    const t1 = VL.el('text', { x: 90, y: 70, style: 'font:11px system-ui;fill:#1a7f37' }, chart);
-    t1.textContent = 'резонанс при E = ' + VL.fm(Eres, 2) + ' дел (ν₀ = ν = 100 Гц)';
-    const t2 = VL.el('text', { x: 90, y: 86, style: 'font:11px system-ui;fill:#6b6b74' }, chart);
-    t2.textContent = dE ? 'ширина ΔE = ' + VL.fm(dE, 3) + ' дел' : 'ширина не определяется: мало точек на склонах';
+    VL.label(chart, ax.X(3), ax.Y(lvl) - 5, '#b3382e',
+      'уровень A_max/√2 = ' + VL.fm(lvl, 2) + ' мм', { 'text-anchor': 'end' });
+    VL.label(chart, 90, 70, '#1a7f37',
+      'резонанс при E = ' + VL.fm(Eres, 2) + ' дел (ν₀ = ν = 100 Гц)');
+    VL.label(chart, 90, 86, '#6b6b74', dE
+      ? 'ширина ΔE = ' + VL.fm(dE, 3) + ' дел'
+      : 'ширина не определяется: мало точек на склонах');
 
     const p = document.createElement('div');
     if (Q) {

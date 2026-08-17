@@ -4,7 +4,6 @@
  * считается скорость звука, приведённая к 0 °C. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vs');
   if (!svg || !window.VL) return;
 
@@ -59,7 +58,7 @@
     $('vsenv2').setAttribute('points', e2.join(' '));
     /* узлы смещения = пучности давления */
     const g = $('vsnodes');
-    while (g.firstChild) g.removeChild(g.firstChild);
+    VL.clear(g);
     for (let k = 0; ; k++) {
       const mm = L0 + k * lam;
       if (mm > 200) break;
@@ -168,8 +167,7 @@
   $('vssnap').addEventListener('click', snap);
   $('vsreset').addEventListener('click', () => {
     rows.length = 0;
-    const g = $('vsmarks');
-    while (g.firstChild) g.removeChild(g.firstChild);
+    VL.clear($('vsmarks'));
     render();
   });
 
@@ -183,8 +181,7 @@
     step: async (i, ctl) => {
       if (i === 0) {
         rows.length = 0;
-        const g = $('vsmarks');
-        while (g.firstChild) g.removeChild(g.firstChild);
+        VL.clear($('vsmarks'));
         render();
       }
       /* «лаборант» подводит микрофон к очередному максимуму с ошибкой на глаз */

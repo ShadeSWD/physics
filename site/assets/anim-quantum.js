@@ -22,44 +22,34 @@
   var NUMAX = 2.0e15;              /* верх шкалы частот на графике */
   var photons = [], electrons = [];
 
-  function colorOf(nm) {
-    if (nm < 400) return '#155e75';
-    if (nm < 500) return '#155e75';
-    if (nm < 570) return '#1a7f37';
-    if (nm < 620) return '#6b6b74';
-    return '#b3382e';
-  }
   function nuOf(nm) { return C / (nm * 1e-9); }
 
+  /* прямая E_max = hν − A, начиная от ν₀; возвращает верх шкалы энергий */
   function drawGraph(A) {
-    var nu0v = A * E / H;
-    /* прямая E_max = hν − A, начиная от ν0 */
     var emax = H * NUMAX - A * E;
-    var x0 = GX0 + (GX1 - GX0) * nu0v / NUMAX;
-    var y1 = GY0 - (GY0 - GY1) * (H * NUMAX - A * E) / Math.max(1e-30, emax);
+    var x0 = GX0 + (GX1 - GX0) * (A * E / H) / NUMAX;
     line.setAttribute('d', 'M' + x0.toFixed(1) + ' ' + GY0 + ' L' + GX1 + ' ' + GY1);
     nu0.setAttribute('d', 'M' + x0.toFixed(1) + ' ' + GY0 + ' V' + GY1);
     nu0lbl.setAttribute('x', (x0 + 4).toFixed(1));
-    return { nu0: nu0v, emaxTop: emax, y1: y1 };
+    return emax;
   }
 
-  var visible = true, raf = null, last = performance.now(), acc = 0;
+  var acc = 0;
 
-  function frame(now) {
-    raf = null;
-    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+  animLoopStep(panel, function (dt) {
     var nm = parseFloat(lIn.value);
     var A = parseFloat(matIn.value);
     var inten = parseFloat(iIn.value);
     var U = parseFloat(uIn.value) / 10;          /* В */
     var nu = nuOf(nm);
     var Emax = H * nu - A * E;                    /* Дж */
-    var g = drawGraph(A);
-    var col = colorOf(nm);
+    var emaxTop = drawGraph(A);
+    /* в модели фотоэффекта синий участок палитры тянется до 500 нм */
+    var col = colorOfWave(nm, 500);
 
     /* точка на графике */
     var xd = GX0 + (GX1 - GX0) * nu / NUMAX;
-    var yd = Emax > 0 ? GY0 - (GY0 - GY1) * Emax / g.emaxTop : GY0;
+    var yd = Emax > 0 ? GY0 - (GY0 - GY1) * Emax / emaxTop : GY0;
     dot.setAttribute('cx', Math.min(GX1, xd).toFixed(1));
     dot.setAttribute('cy', Math.max(GY1, yd).toFixed(1));
 
@@ -105,14 +95,5 @@
           + (UzV > U ? ' · ток идёт' : ' · ток заперт'))
         : 'hν < A — фотоэффекта нет')
       + ' · λ_кр = ' + (H * C / (A * E) * 1e9).toFixed(0) + ' нм';
-    if (visible) raf = requestAnimationFrame(frame);
-  }
-  function start() { if (!raf && visible) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-  if (window.IntersectionObserver) {
-    new IntersectionObserver(function (ev) {
-      visible = ev[0].isIntersecting; if (visible) start(); else stop();
-    }, { threshold: 0.01 }).observe(panel);
-  }
-  start();
+  });
 })();

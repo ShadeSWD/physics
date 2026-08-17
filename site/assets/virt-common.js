@@ -3,12 +3,15 @@
  * пользуется этим пространством имён VL.
  *
  * Движок даёт три вещи:
- *   1) рисование и анимацию SVG-установки (el, loop, meter, axes, series);
+ *   1) рисование и анимацию SVG-установки (el, label, chart, loop, meter,
+ *      axes, series, fit);
  *   2) статистическую обработку ряда измерений по методике практикума
  *      (stats, tstud, roundPair, resultHtml) — среднее, СКО среднего,
  *      коэффициент Стьюдента, полная погрешность, округление и запись
  *      результата, сравнение с истинным значением модели;
  *   3) авто-опыт (auto) — робот-лаборант прогоняет серию сам.
+ *
+ * Загружается после assets/common.js и пользуется его помощниками ($, G, gauss).
  */
 'use strict';
 window.VL = (function () {
@@ -24,6 +27,26 @@ window.VL = (function () {
     return n;
   }
 
+  /* убрать всё содержимое узла */
+  function clear(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  /* подпись на схеме шрифтом 11 px заданного цвета */
+  function label(svg, x, y, color, text, attrs) {
+    const t = el('text', Object.assign({ x, y, style: `font:11px system-ui;fill:${color}` },
+      attrs || {}), svg);
+    t.textContent = text;
+    return t;
+  }
+
+  /* поле графика: SVG-рамка внутри блока с идентификатором hostId */
+  function chart(hostId, viewBox) {
+    const svg = el('svg', { viewBox, class: 'geo-board', style: 'max-width:640px' });
+    document.getElementById(hostId).appendChild(svg);
+    return svg;
+  }
+
   /* ---------- числа ---------- */
 
   /* число по-русски: запятая вместо точки */
@@ -35,15 +58,8 @@ window.VL = (function () {
   function lm(x, d) {
     return x.toFixed(d).replace('.', '{,}');
   }
-  /* равномерный шум ±a */
+  /* равномерный шум ±a; нормальный шум gauss(s) взят из common.js */
   function noise(a) { return (Math.random() * 2 - 1) * a; }
-  /* нормальный шум со среднеквадратичным отклонением s (метод Бокса — Мюллера) */
-  function gauss(s) {
-    let u = 0, v = 0;
-    while (u === 0) u = Math.random();
-    while (v === 0) v = Math.random();
-    return s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
   function clamp(x, a, b) { return x < a ? a : (x > b ? b : x); }
 
   /* ---------- KaTeX и вёрстка ---------- */
@@ -184,6 +200,16 @@ window.VL = (function () {
         t.textContent = titles[i];
       }
     });
+  }
+
+  /* прямая y = kx + b по методу наименьших квадратов; pts — массив [x, y] */
+  function fit(pts) {
+    const n = pts.length;
+    const sx = pts.reduce((s, p) => s + p[0], 0), sy = pts.reduce((s, p) => s + p[1], 0);
+    const sxx = pts.reduce((s, p) => s + p[0] * p[0], 0);
+    const sxy = pts.reduce((s, p) => s + p[0] * p[1], 0);
+    const k = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+    return { k, b: (sy - k * sx) / n };
   }
 
   /* ---------- статистика практикума ---------- */
@@ -360,8 +386,8 @@ window.VL = (function () {
   }
 
   return {
-    el, fm, lm, noise, gauss, clamp, mathify, step, loop, meter, slider,
-    axes, series, ticks, tstud, stats, roundPair, record, devTable, processHtml,
-    verdict, auto,
+    el, clear, label, chart, fm, lm, noise, gauss, clamp, mathify, step, loop,
+    meter, slider, axes, series, ticks, fit, tstud, stats, roundPair, record,
+    devTable, processHtml, verdict, auto,
   };
 })();

@@ -77,10 +77,9 @@
   thIn.addEventListener('input', recalc);
   tcIn.addEventListener('input', recalc);
 
-  var running = true, raf = null, visible = true, t0 = performance.now();
-  function frame(now) {
-    raf = null;
-    var u = ((now - t0) / 2500) % 4;
+  var running = true;
+  var eng = animLoop(panel, function (t) {
+    var u = (t / 2.5) % 4;               /* 2,5 с экранного времени на участок */
     var st = state(u);
     var xy = xyFn(st.V, st.p);
     pt.setAttribute('cx', xy[0].toFixed(1)); pt.setAttribute('cy', xy[1].toFixed(1));
@@ -99,19 +98,10 @@
       qin.setAttribute('d', st.q === 'Q₁' ? 'M14 190 H30' : 'M30 190 H14');
       qlbl.textContent = st.q === 'Q₁' ? 'Q₁ подводится' : 'Q₂ отводится';
     } else { qin.setAttribute('d', 'M20 190 H20'); qlbl.textContent = 'теплообмена нет'; }
-    if (visible && running) raf = requestAnimationFrame(frame);
-  }
-  function start() { if (!raf && running && visible) { raf = requestAnimationFrame(frame); } }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-  if (window.IntersectionObserver) {
-    new IntersectionObserver(function (e) {
-      visible = e[0].isIntersecting; if (visible) start(); else stop();
-    }, { threshold: 0.01 }).observe(panel);
-  }
+  });
   btn.addEventListener('click', function () {
     running = !running;
     btn.textContent = running ? 'Пауза' : 'Пуск';
-    if (running) start(); else stop();
+    eng.setRunning(running);
   });
-  start();
 })();

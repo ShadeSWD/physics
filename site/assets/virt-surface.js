@@ -4,11 +4,9 @@
  * измеряются штангенциркулем, σ сравнивается с табличным значением. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vf');
   if (!svg || !window.VL) return;
 
-  const G = 9.81;
   const LIQ = {
     water: { name: 'дистиллированная вода', s: 0.073, rho: 999 },
     alcohol: { name: 'метиловый спирт', s: 0.023, rho: 793 },
@@ -44,8 +42,7 @@
         t.textContent = String(i * 5);
       }
     }
-    const c = VL.el('text', { x: 96, y: 90, style: 'font:11px system-ui;fill:#6b6b74' }, g);
-    c.textContent = 'шкала, мм';
+    VL.label(g, 96, 90, '#6b6b74', 'шкала, мм');
   }
 
   /* ---------- рисование ---------- */

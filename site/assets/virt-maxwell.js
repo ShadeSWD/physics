@@ -3,11 +3,9 @@
  * По ряду I_i выполняется обработка, отдельно считаются потери энергии. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vm');
   if (!svg || !window.VL) return;
 
-  const G = 9.81;
   const M0 = 0.033, MD = 0.1255, MK = 0.3871;        // массы оси, диска, кольца, кг
   const R0 = 0.005, RN = 0.0002, RD = 0.043, RK = 0.053;
   const R = R0 + 2 * RN;                              // эффективный радиус, м
@@ -42,8 +40,7 @@
         t.textContent = VL.fm(i * 0.05, 2);
       }
     }
-    const cap = VL.el('text', { x: 60, y: Y0 - 10, style: 'font:11px system-ui;fill:#6b6b74' }, sc);
-    cap.textContent = 'шкала, м';
+    VL.label(sc, 60, Y0 - 10, '#6b6b74', 'шкала, м');
   }
 
   function layout() {

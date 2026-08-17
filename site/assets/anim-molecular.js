@@ -19,13 +19,8 @@
   var BOX = { x: 20, y: 40, w: 240, h: 200 };
   var GX0 = 320, GX1 = 615, GY0 = 240, GYT = 45;
   var N = 140, PIX = 1 / 26;      /* пикселей экрана на 1 м/с (масштаб движения) */
-  var parts = [], svgns = 'http://www.w3.org/2000/svg';
+  var parts = [];
 
-  /* нормально распределённое число (Бокс — Мюллер) */
-  function gauss() {
-    var u = 1 - Math.random(), v = Math.random();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
   function sigma(T, M) { return Math.sqrt(R * T / M); }   /* СКО компоненты скорости */
 
   function build() {
@@ -38,7 +33,7 @@
   }
   function reseed(T, M) {
     var s = sigma(T, M);
-    for (var i = 0; i < N; i++) { parts[i].vx = gauss() * s; parts[i].vy = gauss() * s; }
+    for (var i = 0; i < N; i++) { parts[i].vx = gauss(s); parts[i].vy = gauss(s); }
   }
   build();
 
@@ -129,19 +124,5 @@
   tIn.addEventListener('input', onChange);
   gasIn.addEventListener('change', onChange);
 
-  var visible = true, raf = null, last = performance.now();
-  function frame(now) {
-    raf = null;
-    var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    step(dt); drawHist();
-    if (visible) raf = requestAnimationFrame(frame);
-  }
-  function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-  if (window.IntersectionObserver) {
-    new IntersectionObserver(function (e) {
-      visible = e[0].isIntersecting; if (visible) start(); else stop();
-    }, { threshold: 0.01 }).observe(panel);
-  }
-  start();
+  animLoopStep(panel, function (dt) { step(dt); drawHist(); });
 })();

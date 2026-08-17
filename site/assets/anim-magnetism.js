@@ -59,10 +59,12 @@
         : 'положительный (вращение по часовой стрелке)');
   }
 
-  var visible = true, raf = null, t0 = performance.now();
-  function frame(now) {
-    raf = null;
-    var t = (now - t0) / 1000;
+  [bIn, vIn, aIn].forEach(function (el) {
+    el.addEventListener('input', function () { trail = []; });
+  });
+  negIn.addEventListener('change', function () { trail = []; });
+
+  animLoop(panel, function (t) {
     var p = params();
     var ph = p.om * t;
     var x = CX + p.r * Math.cos(ph);
@@ -94,18 +96,5 @@
     }
     helix.setAttribute('d', hd);
     readout(p);
-    if (visible) raf = requestAnimationFrame(frame);
-  }
-  function start() { if (!raf && visible) raf = requestAnimationFrame(frame); }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-  [bIn, vIn, aIn].forEach(function (el) {
-    el.addEventListener('input', function () { trail = []; });
   });
-  negIn.addEventListener('change', function () { trail = []; });
-  if (window.IntersectionObserver) {
-    new IntersectionObserver(function (e) {
-      visible = e[0].isIntersecting; if (visible) start(); else stop();
-    }, { threshold: 0.01 }).observe(panel);
-  }
-  start();
 })();

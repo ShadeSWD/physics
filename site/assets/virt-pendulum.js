@@ -4,11 +4,10 @@
  * методике практикума. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vp');
   if (!svg || !window.VL) return;
 
-  const G = 9.8191;        // истинное значение, заложенное в модель (широта СПб)
+  const G_SPB = 9.8191;    // истинное значение, заложенное в модель (широта СПб)
   const D_L = 0.001;       // приборная погрешность шкалы штанги, м
   /* режимы отсчёта времени: цена деления, СКО случайной ошибки момента
    * пуска/останова, приборная погрешность */
@@ -26,7 +25,7 @@
   /* период с поправкой на конечную амплитуду */
   function period(l, a0) {
     const th = a0 * Math.PI / 180;
-    return 2 * Math.PI * Math.sqrt(l / G) * (1 + th * th / 16);
+    return 2 * Math.PI * Math.sqrt(l / G_SPB) * (1 + th * th / 16);
   }
 
   /* ---------- геометрия, зависящая от длины ---------- */
@@ -140,7 +139,7 @@
     h += '<h3>Обработка ряда \\(g_i\\)</h3>';
     const pr = VL.processHtml({
       xs: rows.map(r => r.g), instr, sym: 'g', unit: 'м/с²', dec: 3,
-      trueVal: G, trueName: 'табличным значением для широты Санкт-Петербурга (9,819 м/с²)',
+      trueVal: G_SPB, trueName: 'табличным значением для широты Санкт-Петербурга (9,819 м/с²)',
     });
     h += pr.html;
 
@@ -174,18 +173,10 @@
 
   function drawChart() {
     const pts = rows.map(r => [r.L, r.T * r.T]);
-    const n = pts.length;
-    const sx = pts.reduce((s, p) => s + p[0], 0), sy = pts.reduce((s, p) => s + p[1], 0);
-    const sxx = pts.reduce((s, p) => s + p[0] * p[0], 0);
-    const sxy = pts.reduce((s, p) => s + p[0] * p[1], 0);
-    const k = (n * sxy - sx * sy) / (n * sxx - sx * sx);
-    const b = (sy - k * sx) / n;
+    const { k, b } = VL.fit(pts);
     const gk = 4 * Math.PI * Math.PI / k;
 
-    const chart = VL.el('svg', {
-      viewBox: '0 0 640 300', class: 'geo-board', style: 'max-width:640px',
-    });
-    $('vpchart').appendChild(chart);
+    const chart = VL.chart('vpchart', '0 0 640 300');
     const ax = VL.axes(chart, {
       x0: 66, y0: 250, x1: 596, y1: 40, xmin: 0, xmax: 1.2, ymin: 0, ymax: 5,
       xticks: [0.2, 0.4, 0.6, 0.8, 1.0, 1.2].map(v => ({ v, label: VL.fm(v, 1) })),
@@ -196,10 +187,9 @@
       null, { dash: '6 5', width: 1.4, noPoints: true });
     VL.series(chart, pts.map(p => [ax.X(p[0]), ax.Y(p[1])]), '#155e75',
       pts.map(p => `L = ${VL.fm(p[0], 2)} м, T² = ${VL.fm(p[1], 3)} с²`), { nolines: true });
-    const t1 = VL.el('text', { x: 300, y: 70, style: 'font:11px system-ui;fill:#1a7f37' }, chart);
-    t1.textContent = 'наклон k = ' + VL.fm(k, 3) + ' с²/м → g = 4π²/k = ' + VL.fm(gk, 2) + ' м/с²';
-    const t2 = VL.el('text', { x: 300, y: 86, style: 'font:11px system-ui;fill:#6b6b74' }, chart);
-    t2.textContent = 'отсечка b = ' + VL.fm(b, 3) + ' с² (в идеале ноль)';
+    VL.label(chart, 300, 70, '#1a7f37',
+      'наклон k = ' + VL.fm(k, 3) + ' с²/м → g = 4π²/k = ' + VL.fm(gk, 2) + ' м/с²');
+    VL.label(chart, 300, 86, '#6b6b74', 'отсечка b = ' + VL.fm(b, 3) + ' с² (в идеале ноль)');
   }
 
   /* ---------- органы управления ---------- */

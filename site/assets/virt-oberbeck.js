@@ -4,11 +4,9 @@
  * по точкам ε(M) строится прямая, наклон которой даёт I без вклада трения. */
 'use strict';
 (function () {
-  const $ = id => document.getElementById(id);
   const svg = $('vo');
   if (!svg || !window.VL) return;
 
-  const G = 9.81;              // принятое в работе значение, м/с²
   const M1 = 0.193;            // масса груза на стержне, кг
   const M2 = 0.05181;          // масса стержня, кг
   const ELL = 0.22;            // длина стержня, м
@@ -45,8 +43,7 @@
         t.textContent = VL.fm(i * 0.1, 1);
       }
     }
-    const cap = VL.el('text', { x: 120, y: 84, style: 'font:11px system-ui;fill:#6b6b74' }, g);
-    cap.textContent = 'шкала, м';
+    VL.label(g, 120, 84, '#6b6b74', 'шкала, м');
     for (let i = 0; i < 4; i++) VL.el('line', {}, $('vorods'));
     for (let i = 0; i < 4; i++) {
       const w = VL.el('rect', {
@@ -189,7 +186,6 @@
     }
 
     const Ig = Ith(Rg);
-    const mm = grp.reduce((s, r) => s + r.m, 0) / grp.length;
     const tm = grp.reduce((s, r) => s + r.t, 0) / grp.length;
     const hm = grp.reduce((s, r) => s + r.h, 0) / grp.length;
     const Im = grp.reduce((s, r) => s + r.I, 0) / grp.length;
@@ -231,21 +227,13 @@
 
   function drawChart(grp, Ig) {
     const pts = grp.map(r => [r.M, r.eps]);
-    const n = pts.length;
-    const sx = pts.reduce((s, p) => s + p[0], 0), sy = pts.reduce((s, p) => s + p[1], 0);
-    const sxx = pts.reduce((s, p) => s + p[0] * p[0], 0);
-    const sxy = pts.reduce((s, p) => s + p[0] * p[1], 0);
-    const k = (n * sxy - sx * sy) / (n * sxx - sx * sx);
-    const b = (sy - k * sx) / n;
+    const { k, b } = VL.fit(pts);
     const Ik = 1 / k;
     const Mfr = -b / k;
 
     const mmax = Math.max.apply(null, pts.map(p => p[0])) * 1.15;
     const emax = Math.max.apply(null, pts.map(p => p[1])) * 1.15;
-    const chart = VL.el('svg', {
-      viewBox: '0 0 640 300', class: 'geo-board', style: 'max-width:640px',
-    });
-    $('vochart').appendChild(chart);
+    const chart = VL.chart('vochart', '0 0 640 300');
     const ax = VL.axes(chart, {
       x0: 74, y0: 250, x1: 596, y1: 40, xmin: 0, xmax: mmax, ymin: 0, ymax: emax,
       xticks: VL.ticks(0, mmax, 5).map(v => ({ v, label: VL.fm(v * 1000, 0) })),
@@ -256,14 +244,12 @@
       null, { dash: '6 5', width: 1.4, noPoints: true });
     VL.series(chart, pts.map(p => [ax.X(p[0]), ax.Y(p[1])]), '#155e75',
       pts.map(p => `M = ${VL.fm(p[0] * 1000, 2)} мН·м, ε = ${VL.fm(p[1], 2)} с⁻²`), { nolines: true });
-    const t1 = VL.el('text', { x: 190, y: 70, style: 'font:11px system-ui;fill:#1a7f37' }, chart);
-    t1.textContent = 'наклон 1/I = ' + VL.fm(k, 1) + ' → I = ' + VL.fm(Ik, 4) + ' кг·м²';
-    const t2 = VL.el('text', { x: 190, y: 86, style: 'font:11px system-ui;fill:#b3382e' }, chart);
-    t2.textContent = Mfr > 0
+    VL.label(chart, 190, 70, '#1a7f37',
+      'наклон 1/I = ' + VL.fm(k, 1) + ' → I = ' + VL.fm(Ik, 4) + ' кг·м²');
+    VL.label(chart, 190, 86, '#b3382e', Mfr > 0
       ? 'отсечка по моменту M_тр = ' + VL.fm(Mfr * 1000, 2) + ' мН·м (оценка грубая)'
-      : 'отсечка вышла отрицательной: трение по этим точкам не разрешается';
-    const t3 = VL.el('text', { x: 190, y: 102, style: 'font:11px system-ui;fill:#6b6b74' }, chart);
-    t3.textContent = 'расчётное I = ' + VL.fm(Ig, 4) + ' кг·м²';
+      : 'отсечка вышла отрицательной: трение по этим точкам не разрешается');
+    VL.label(chart, 190, 102, '#6b6b74', 'расчётное I = ' + VL.fm(Ig, 4) + ' кг·м²');
 
     const p = document.createElement('p');
     p.className = 'small';

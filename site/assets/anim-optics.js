@@ -17,15 +17,6 @@
   if (!lIn || !dIn || !LIn || !out || !waves || !s1 || !s2 || !screen || !fringes || !profile) return;
 
   var SX = 70, CY = 150;            /* плоскость щелей */
-  /* цвет по длине волны (в пределах палитры схем — от синего к красному) */
-  function colorOf(nm) {
-    if (nm < 480) return '#155e75';
-    if (nm < 570) return '#1a7f37';
-    if (nm < 620) return '#6b6b74';
-    return '#b3382e';
-  }
-
-  var visible = true, raf = null, t0 = performance.now();
 
   /* дуга радиуса r из точки (cx, cy), обрезанная прямоугольником
      [SX … xr] × [20 … 280]: точки вне рамки просто выбрасываются */
@@ -47,7 +38,7 @@
     var nm = parseFloat(lIn.value);
     var d = parseFloat(dIn.value);         /* пиксели между щелями */
     var L = parseFloat(LIn.value);         /* «расстояние до экрана», условные */
-    var col = colorOf(nm);
+    var col = colorOfWave(nm);
     var y1 = CY - d / 2, y2 = CY + d / 2;
     s1.setAttribute('cy', y1.toFixed(1));
     s2.setAttribute('cy', y2.toFixed(1));
@@ -93,17 +84,5 @@
       + (nm * 1e-9 * (L / 100) / (d / 70 * 1e-3) * 1e3).toFixed(2) + ' мм';
   }
 
-  function frame(now) {
-    raf = null;
-    draw((now - t0) / 1000);
-    if (visible) raf = requestAnimationFrame(frame);
-  }
-  function start() { if (!raf && visible) raf = requestAnimationFrame(frame); }
-  function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
-  if (window.IntersectionObserver) {
-    new IntersectionObserver(function (e) {
-      visible = e[0].isIntersecting; if (visible) start(); else stop();
-    }, { threshold: 0.01 }).observe(panel);
-  }
-  start();
+  animLoop(panel, draw);
 })();
