@@ -5,13 +5,14 @@
  * Движок даёт три вещи:
  *   1) рисование и анимацию SVG-установки (el, label, chart, loop, meter,
  *      axes, series, fit);
- *   2) статистическую обработку ряда измерений по методике практикума
- *      (stats, tstud, roundPair, resultHtml) — среднее, СКО среднего,
- *      коэффициент Стьюдента, полная погрешность, округление и запись
- *      результата, сравнение с истинным значением модели;
+ *   2) ВЁРСТКУ обработки ряда измерений — таблицу отклонений, шаги расчёта,
+ *      запись результата и вердикт о согласии с эталоном; сама арифметика
+ *      (среднее, СКО, Стьюдент, суммирование, округление, МНК) живёт в
+ *      чистом модуле assets/metro.js и здесь только вызывается;
  *   3) авто-опыт (auto) — робот-лаборант прогоняет серию сам.
  *
- * Загружается после assets/common.js и пользуется его помощниками ($, G, gauss).
+ * Загружается после assets/common.js и assets/metro.js и пользуется их
+ * помощниками ($, G, gauss) и расчётами (METRO).
  */
 'use strict';
 window.VL = (function () {
@@ -202,68 +203,28 @@ window.VL = (function () {
     });
   }
 
-  /* прямая y = kx + b по методу наименьших квадратов; pts — массив [x, y] */
-  function fit(pts) {
-    const n = pts.length;
-    const sx = pts.reduce((s, p) => s + p[0], 0), sy = pts.reduce((s, p) => s + p[1], 0);
-    const sxx = pts.reduce((s, p) => s + p[0] * p[0], 0);
-    const sxy = pts.reduce((s, p) => s + p[0] * p[1], 0);
-    const k = (n * sxy - sx * sy) / (n * sxx - sx * sx);
-    return { k, b: (sy - k * sx) / n };
-  }
+  /* ---------- статистика практикума: тонкие обёртки над METRO ----------
+   *
+   * Раньше здесь лежали свои копии среднего, СКО, таблицы Стьюдента и
+   * округления. Копии нельзя было ни проверить тестом (файл трогает DOM и
+   * в node не грузится), ни переиспользовать на статической странице
+   * errors.html. Теперь расчёт один — в assets/metro.js, а тут остались
+   * только имена, к которым привыкли двенадцать работ. */
+  const M = (typeof window !== 'undefined' && window.METRO) || null;
 
-  /* ---------- статистика практикума ---------- */
+  /* прямая y = kx + b по методу наименьших квадратов; pts — массив [x, y].
+     Отдаёт заодно погрешности коэффициентов — работы, которые определяют
+     величину по наклону прямой, берут Δk прямо отсюда. */
+  function fit(pts) { return M.lsq(pts); }
 
-  /* коэффициенты Стьюдента (таблица кафедры физики) */
-  const T_TABLE = {
-    0.9: { 2: 6.3, 3: 2.9, 4: 2.4, 5: 2.1, 6: 2.0, 7: 1.9, 8: 1.9, 9: 1.8, 10: 1.8 },
-    0.95: { 2: 12.7, 3: 4.3, 4: 3.2, 5: 2.8, 6: 2.6, 7: 2.4, 8: 2.3, 9: 2.2, 10: 2.2 },
-    0.99: { 2: 63.7, 3: 9.9, 4: 5.8, 5: 4.6, 6: 4.0, 7: 3.5, 8: 3.4, 9: 3.3, 10: 3.3 },
-  };
-  const T_INF = { 0.9: 1.6, 0.95: 2.0, 0.99: 2.6 };
-  function tstud(n, alpha) {
-    const a = alpha || 0.95;
-    const row = T_TABLE[a] || T_TABLE[0.95];
-    if (n < 2) return 0;
-    if (n <= 10) return row[n];
-    /* при n > 10 плавно спускаемся к предельному значению */
-    return Math.max(T_INF[a], row[10] - (row[10] - T_INF[a]) * (n - 10) / 20);
-  }
+  const tstud = (n, alpha) => M.tStudent(n, alpha);
+  const stats = (xs, instr, alpha) => M.series(xs, instr, alpha);
 
-  /* обработка ряда прямых (или приведённых к прямым) измерений.
-   * xs — массив отсчётов, instr — приборная погрешность одного отсчёта */
-  function stats(xs, instr, alpha) {
-    const n = xs.length;
-    const a = alpha || 0.95;
-    const mean = xs.reduce((s, x) => s + x, 0) / n;
-    const ss = xs.reduce((s, x) => s + (x - mean) * (x - mean), 0);
-    const S = n > 1 ? Math.sqrt(ss / (n - 1)) : 0;
-    const Sm = n > 1 ? Math.sqrt(ss / (n * (n - 1))) : 0;
-    const t = tstud(n, a);
-    const dRand = t * Sm;
-    const dInstr = instr || 0;
-    const d = Math.sqrt(dRand * dRand + dInstr * dInstr);
-    return {
-      n, alpha: a, mean, ss, S, Sm, t, dRand, dInstr, d,
-      rel: mean !== 0 ? d / Math.abs(mean) : 0,
-    };
-  }
-
-  /* округление по правилам практикума: погрешность — до одной значащей цифры
-   * (двух, если первая 1 или 2), результат — до того же разряда */
+  /* округление по правилам практикума (METRO.roundPair) плюс готовые строки
+   * с запятой-разделителем — их печатают журнал и запись результата */
   function roundPair(x, d) {
-    if (!(d > 0) || !isFinite(d)) {
-      return { x, d: 0, dec: 3, sx: fm(x, 3), sd: fm(0, 3) };
-    }
-    const e = Math.floor(Math.log10(d) + 1e-12);
-    const lead = Math.floor(d / Math.pow(10, e) + 1e-9);
-    const keep = lead <= 2 ? 1 : 0;              /* разрядов после старшего */
-    const p = Math.pow(10, e - keep);
-    let dr = Math.round(d / p) * p;
-    if (dr <= 0) dr = p;
-    const xr = Math.round(x / p) * p;
-    const dec = Math.max(0, keep - e);
-    return { x: xr, d: dr, dec, sx: fm(xr, dec), sd: fm(dr, dec) };
+    const r = M.roundPair(x, d);
+    return { x: r.x, d: r.d, dec: r.dec, sx: fm(r.x, r.dec), sd: fm(r.d, r.dec) };
   }
 
   /* запись результата в виде «⟨x⟩ ± Δx, единицы (α = 0,95)» */
